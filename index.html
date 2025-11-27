@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Fake QR Capture</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="container">
+    <h1>Fake QR Capture</h1>
+
+    <input id="nameInput" type="text" placeholder="Enter a name">
+    <button id="captureBtn">Capture + Generate Fake QR</button>
+    <button id="saveBtn" style="display:none;">Save + Continue to Gallery</button>
+  </div>
+
+  <!-- p5.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.min.js"></script>
+
+ <!-- Firebase v8 scripts -->
+<script src="https://www.gstatic.com/firebasejs/8.17.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.17.0/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.17.0/firebase-firestore.js"></script>
+
+<script>
+  // Your config
+  const firebaseConfig = {
+    apiKey: "AIzaSyD9Oj4pG2hQOrRC6kQHzYLaoYfclYqrkC4",
+    authDomain: "qr-code-storage-cafbd.firebaseapp.com",
+    projectId: "qr-code-storage-cafbd",
+    storageBucket: "qr-code-storage-cafbd.appspot.com",
+    messagingSenderId: "331142708016",
+    appId: "1:331142708016:web:eacbda8f3ea08b87df66f5",
+    measurementId: "G-BMQ5BXCJL4"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const storage = firebase.storage();
+  const db = firebase.firestore();
+</script>
+
+<!-- Then load your sketch -->
+<script src="sketch.js"></script>
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>

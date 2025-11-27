@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Gallery</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      justify-items: center;
+    }
+    .grid-item {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      overflow: hidden;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background: #f0f0f0;
+    }
+    .grid-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .grid-item .name {
+      position: absolute;
+      bottom: 5px;
+      width: 100%;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+      text-shadow: 1px 1px 3px black;
+      background: rgba(0,0,0,0.2);
+      padding: 2px 0;
+    }
+    .grid-item .qr-overlay {
+      position: absolute;
+      width: 40%;
+      height: 40%;
+      top: 30%;
+      left: 30%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gallery</h1>
+  <div class="grid" id="gallery"></div>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9Oj4pG2hQOrRC6kQHzYLaoYfclYqrkC4",
+      authDomain: "qr-code-storage-cafbd.firebaseapp.com",
+      projectId: "qr-code-storage-cafbd",
+      storageBucket: "qr-code-storage-cafbd.appspot.com",
+      messagingSenderId: "331142708016",
+      appId: "1:331142708016:web:eacbda8f3ea08b87df66f5",
+      measurementId: "G-BMQ5BXCJL4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const galleryDiv = document.getElementById("gallery");
+
+    async function loadGallery() {
+      const querySnapshot = await getDocs(collection(db, "gallery"));
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        const item = document.createElement("div");
+        item.className = "grid-item";
+
+        // Main image
+        const img = document.createElement("img");
+        img.src = data.url;
+        item.appendChild(img);
+
+        // QR overlay (smaller)
+        const qr = document.createElement("img");
+        qr.src = data.url; // Using same image since the QR is included in capture
+        qr.className = "qr-overlay";
+        item.appendChild(qr);
+
+        // Name caption
+        const name = document.createElement("div");
+        name.className = "name";
+        name.textContent = data.name;
+        item.appendChild(name);
+
+        galleryDiv.appendChild(item);
+      });
+    }
+
+    loadGallery();
+  </script>
+</body>
+</html>
