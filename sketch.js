@@ -164,8 +164,8 @@ async function saveToFirebase() {
       const url = await window.getDownloadURL(fileRef);
 
 
-      // Save record in Firestore
-      await addDoc(collection(db, "gallery"), {
+      // Save record in Firestore (use window.db to ensure Firestore is initialized)
+      await window.addDoc(window.collection(window.db, "gallery"), {
         name,
         url
       });
