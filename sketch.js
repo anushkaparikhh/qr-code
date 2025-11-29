@@ -1,4 +1,16 @@
-// sketch.js
+// import Firebase functions from global window
+const storage = window.storage;
+const db = window.db;
+const collection = window.collection;
+const addDoc = window.addDoc;
+
+const ref = window.ref;
+const uploadBytes = window.uploadBytes;  // ✔️ now defined
+const getDownloadURL = window.getDownloadURL; // ✔️ now defined
+
+
+
+// sketch.js — Firebase v12 fixed version
 
 let video;
 let capturedImage;
@@ -11,55 +23,45 @@ let qrSize = 29;
 let moduleSize = 12;
 
 function setup() {
-  // Attach canvas to body and set size
   createCanvas(400, 400).parent(document.body);
   pixelDensity(1);
   background(220);
 
-  // Hide video element, we'll draw manually
   video = createCapture(VIDEO);
   video.size(width, height);
   video.hide();
 
-  // Select DOM elements
   captureBtn = select("#captureBtn");
   saveBtn = select("#saveBtn");
   nameInput = select("#nameInput");
 
-  // Capture button
   captureBtn.mousePressed(capturePhoto);
-
-  // Save button
   saveBtn.mousePressed(saveToFirebase);
 }
 
 function draw() {
   if (!saved) {
-    // Show live video
     image(video, 0, 0, width, height);
   } else if (capturedImage && qrCanvas) {
-    // Show captured image + QR overlay
     image(capturedImage, 0, 0, width, height);
     image(qrCanvas, width * 0.3, height * 0.3, width * 0.4, height * 0.4);
   }
 }
 
-// Capture image and generate fake QR
 function capturePhoto() {
   saved = true;
 
-  // Capture current frame
   capturedImage = createImage(width, height);
   capturedImage.copy(video, 0, 0, width, height, 0, 0, width, height);
 
-  // Generate QR
   qrCanvas = createGraphics(qrSize * moduleSize, qrSize * moduleSize);
   generateFakeQR(qrCanvas, capturedImage);
 
   saveBtn.show();
 }
 
-// --- QR Functions ---
+// -------- QR GENERATION --------
+
 function generateFakeQR(pg, img) {
   pg.image(img, 0, 0, pg.width, pg.height);
   pg.loadPixels();
@@ -74,7 +76,6 @@ function generateFakeQR(pg, img) {
   fillDataFromImage(qr, pg);
   fillRemainingLight(qr);
 
-  // Draw QR
   for (let x = 0; x < qrSize; x++) {
     for (let y = 0; y < qrSize; y++) {
       pg.noStroke();
@@ -143,38 +144,40 @@ function fillRemainingLight(qr) {
   }
 }
 
-// --- Save to Firebase ---
-function saveToFirebase() {
+// -------- SAVE TO FIREBASE (v12) --------
+
+async function saveToFirebase() {
   const name = nameInput.value();
   if (!name || !capturedImage || !qrCanvas) {
     alert("Enter a name and capture a photo first!");
     return;
   }
 
-  // Combine captured image + QR
   let combined = createGraphics(width, height);
   combined.image(capturedImage, 0, 0, width, height);
   combined.image(qrCanvas, width * 0.3, height * 0.3, width * 0.4, height * 0.4);
-  combined.loadPixels();
 
   combined.canvas.toBlob(async (blob) => {
     try {
-      // Firebase Storage upload
-      const fileRef = storage.ref().child(`images/${Date.now()}.png`);
-      await fileRef.put(blob);
-      const url = await fileRef.getDownloadURL();
+      const fileRef = window.ref(window.storage, `images/${Date.now()}.png`);
+      await window.uploadBytes(fileRef, blob);
+      const url = await window.getDownloadURL(fileRef);
 
-      // Firestore save
-      await db.collection("gallery").add({ name, url });
+
+      // Save record in Firestore
+      await addDoc(collection(db, "gallery"), {
+        name,
+        url
+      });
 
       alert("Saved to Firebase!");
       saveBtn.hide();
 
-      // Redirect to gallery
       window.location.href = "gallery.html";
+
     } catch (err) {
       console.error(err);
-      alert("Error saving to Firebase");
+      alert("Error saving to Firebase.");
     }
   });
 }
