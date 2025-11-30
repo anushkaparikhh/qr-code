@@ -1,6 +1,6 @@
 // gallery.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 // Your Firebase config
 const firebaseConfig = {
@@ -22,7 +22,11 @@ const galleryDiv = document.getElementById("gallery");
 
 // Load gallery entries from Firestore
 async function loadGallery() {
-  const querySnapshot = await getDocs(collection(db, "gallery"));
+  const q = query(
+    collection(db, "gallery"),
+    orderBy("timestamp", "desc") // Most recent first
+  );
+  const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach((doc) => {
     const data = doc.data();
@@ -36,13 +40,7 @@ async function loadGallery() {
     img.src = data.url; // full image with QR already
     item.appendChild(img);
 
-    // Optional smaller QR overlay (centered 40% size)
-    const qrOverlay = document.createElement("img");
-    qrOverlay.src = data.url; // same image, smaller overlay
-    qrOverlay.className = "qr-overlay";
-    item.appendChild(qrOverlay);
-
-    // Name caption
+    // Name caption below the image
     const nameDiv = document.createElement("div");
     nameDiv.className = "name";
     nameDiv.textContent = data.name;

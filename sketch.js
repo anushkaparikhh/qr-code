@@ -31,6 +31,7 @@ function setup() {
   video.size(width, height);
   video.hide();
 
+
   captureBtn = select("#captureBtn");
   saveBtn = select("#saveBtn");
   nameInput = select("#nameInput");
@@ -167,7 +168,8 @@ async function saveToFirebase() {
       // Save record in Firestore (use window.db to ensure Firestore is initialized)
       await window.addDoc(window.collection(window.db, "gallery"), {
         name,
-        url
+        url,
+        timestamp: window.Date.now()
       });
 
       alert("Saved to Firebase!");

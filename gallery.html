@@ -2,57 +2,77 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>Gallery</title>
+  <title>a collection</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Redaction';
       text-align: center;
-      padding: 20px;
+      padding: 60px 100px;
     }
     h1 {
       margin-bottom: 20px;
     }
+    /* gallery layout */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(3, 1fr); /* 3 columns */
+      column-gap: 0px;   /* horizontal spacing (make this small) */
+      row-gap: 20px; 
       justify-items: center;
+      align-items: start;
     }
+
+    /* item container is a column so children stack vertically */
     .grid-item {
-      position: relative;
-      width: 250px;
-      height: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 342.75px;        /* fixed card width */
+      /* height removed so caption can flow below image naturally */
       overflow: hidden;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      background: #f0f0f0;
+      border: 1px solid #000000;
+      border-radius: 0px;
+      background: #F9F9F9;
+      padding: 20px;
+      box-sizing: border-box;
     }
-    .grid-item img {
+
+    /* image wrapper controls image box size and cropping */
+    .grid-item .img-box {
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%; /* makes square box: 250x250 via width */
+      position: relative;
+      overflow: hidden;
+      border-radius: 0px;
+      background: #ddd;
+      border: 1px solid #000000;
+    }
+
+    /* the actual <img> fills the wrapper and is cropped via object-fit */
+    .grid-item .img-box img {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
+
+    /* caption below the image */
     .grid-item .name {
-      position: absolute;
-      bottom: 5px;
+      margin-top: 10px;
       width: 100%;
       text-align: center;
-      font-weight: bold;
-      color: white;
-      text-shadow: 1px 1px 3px black;
-      background: rgba(0,0,0,0.2);
-      padding: 2px 0;
+      font-weight: 700;
+      color: #111;
+      background: none;      /* override any previous translucent background */
+      text-shadow: none;
+      padding: 6px 0 0 0;
+      box-sizing: border-box;
     }
-    .grid-item .qr-overlay {
-      position: absolute;
-      width: 40%;
-      height: 40%;
-      top: 30%;
-      left: 30%;
-      object-fit: cover;
-      pointer-events: none;
-    }
+
   </style>
   <script type="module" src="https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js"></script>
   <script type="module" src="https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js"></script>
@@ -63,6 +83,7 @@
 
   <!-- Firebase -->
   <script type="module">
+  // gallery.js
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
@@ -82,35 +103,42 @@
     const galleryDiv = document.getElementById("gallery");
 
     async function loadGallery() {
+      galleryDiv.innerHTML = ""; // clear first
       const querySnapshot = await getDocs(collection(db, "gallery"));
+
       querySnapshot.forEach((doc) => {
         const data = doc.data();
 
+        // container
         const item = document.createElement("div");
         item.className = "grid-item";
 
-        // Main image
+        // image wrapper
+        const imgBox = document.createElement("div");
+        imgBox.className = "img-box";
+
         const img = document.createElement("img");
-        img.src = data.url;
-        item.appendChild(img);
+        img.src = data.url || "";      // URL of saved combined photo (photo + fake QR)
+        img.alt = data.name || "Photo";
+        imgBox.appendChild(img);
 
-        // QR overlay (smaller)
-        const qr = document.createElement("img");
-        qr.src = data.url; // Using same image since the QR is included in capture
-        qr.className = "qr-overlay";
-        item.appendChild(qr);
+        item.appendChild(imgBox);
 
-        // Name caption
-        const name = document.createElement("div");
-        name.className = "name";
-        name.textContent = data.name;
-        item.appendChild(name);
+        // caption - appended after image so it appears below
+        const nameDiv = document.createElement("div");
+        nameDiv.className = "name";
+        nameDiv.textContent = data.name || "Unnamed";
+        item.appendChild(nameDiv);
 
         galleryDiv.appendChild(item);
       });
     }
 
-    loadGallery();
+    loadGallery().catch(err => {
+      console.error("Failed to load gallery:", err);
+      galleryDiv.textContent = "Failed to load gallery.";
+    });
+
   </script>
 </body>
 </html>

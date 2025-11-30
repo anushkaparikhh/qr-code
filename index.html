@@ -2,15 +2,15 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Fake QR Capture</title>
+  <title>qr code</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="container">
-    <h1>Fake QR Capture</h1>
-
-    <input id="nameInput" type="text" placeholder="Enter a name">
-    <button id="captureBtn">Capture + Generate Fake QR</button>
+  <div id="container controls">
+    <h1>capture a clear image of your face</h1>
+	<div id="cameraHolder"></div>
+    <input id="nameInput" type="text" placeholder="type your full name here">
+    <button id="captureBtn">CAPTURE</button>
     <button id="saveBtn" style="display:none;">Save + Continue to Gallery</button>
   </div>
 
@@ -27,9 +27,9 @@
       uploadBytes, 
       getDownloadURL 
     } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
-    import { getFirestore, collection, addDoc, getDocs } 
+    import { getFirestore, collection, addDoc, getDocs, serverTimestamp} 
       from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
+	
     const firebaseConfig = {
         apiKey: "AIzaSyD9Oj4pG2hQOrRC6kQHzYLaoYfclYqrkC4",
   		authDomain: "qr-code-storage-cafbd.firebaseapp.com",
@@ -57,6 +57,51 @@
 
   <!-- Your p5 sketch -->
   <script src="sketch.js"></script>
+
+  <script>
+(function moveP5IntoHolder(){
+  const holder = document.getElementById('cameraHolder');
+  if (!holder) return console.warn("cameraHolder not found");
+
+  // Try every 75ms until a canvas or video exists. Stop after ~4s.
+  let tries = 0;
+  const maxTries = 60;
+  const id = setInterval(() => {
+    tries++;
+    const canvas = document.querySelector('canvas');         // p5 canvas
+    const vids = document.querySelectorAll('video');        // p5 video(s)
+
+    // When canvas or video exists, move them inside the holder (preserve order)
+    if (canvas || vids.length) {
+      // Move video (if any) first so video appears above canvas if desired
+      if (vids.length) {
+        // pick the first <video> that p5 created
+        const v = vids[0];
+        if (v && v.parentNode !== holder) holder.insertBefore(v, holder.firstChild);
+      }
+
+      if (canvas && canvas.parentNode !== holder) {
+        // Insert canvas after video (so canvas is below video) — adjust as needed
+        if (holder.firstChild) holder.insertBefore(canvas, holder.firstChild.nextSibling);
+        else holder.appendChild(canvas);
+      }
+
+      // Optionally center them via CSS
+      holder.style.display = 'flex';
+      holder.style.flexDirection = 'column';
+      holder.style.alignItems = 'center';
+      clearInterval(id);
+      return;
+    }
+
+    if (tries >= maxTries) {
+      clearInterval(id);
+      console.warn("moveP5IntoHolder: timed out — no canvas/video found");
+    }
+  }, 75);
+})();
+</script>
+
 
   <!-- Code injected by live-server -->
   <script>
