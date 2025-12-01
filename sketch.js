@@ -42,7 +42,12 @@ function setup() {
 
 function draw() {
   if (!saved) {
+  push();
+    // Flip horizontally to un-mirror the webcam
+    translate(width, 0);
+    scale(-1, 1);
     image(video, 0, 0, width, height);
+    pop();
   } else if (capturedImage && qrCanvas) {
     image(capturedImage, 0, 0, width, height);
     image(qrCanvas, width * 0.3, height * 0.3, width * 0.4, height * 0.4);

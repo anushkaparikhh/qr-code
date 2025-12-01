@@ -73,12 +73,68 @@
       box-sizing: border-box;
     }
 
+        /* ---------------------------- */
+    /* MOBILE + TABLET RESPONSIVE   */
+    /* ---------------------------- */
+
+    /* Medium screens → 2 columns */
+    @media (max-width: 1200px) {
+      body {
+        padding: 40px 40px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 10px;
+        row-gap: 20px;
+        padding: 50px;
+      }
+
+      .grid-item {
+        width: 100%;
+        padding: 15px;
+      }
+    }
+
+    /* Small screens → 1 column */
+    @media (max-width: 600px) {
+      body {
+        padding: 30px 20px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;   /* ONE COLUMN */
+        row-gap: 25px;
+        column-gap: 0;
+        padding: 50px;
+      }
+
+      .grid-item {
+        width: 100%;
+        padding: 15px;
+      }
+
+      .grid-item .img-box {
+        padding-bottom: 100%; /* still square */
+      }
+
+      h1 {
+        font-size: 1.4rem;
+        padding: 0 10px;
+      }
+
+      .name {
+        font-size: 1rem;
+      }
+    }
+
+
   </style>
   <script type="module" src="https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js"></script>
   <script type="module" src="https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js"></script>
 </head>
 <body>
-  <h1>Gallery</h1>
+  <h1>a collection</h1>
   <div class="grid" id="gallery"></div>
 
   <!-- Firebase -->

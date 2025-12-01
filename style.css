@@ -85,3 +85,46 @@ button {
   text-align: center;
   display: block;          /* ensures consistent sizing */
 }
+
+/* --- MOBILE LAYOUT --- */
+@media (max-width: 600px) {
+
+  body {
+    padding: 10px;
+  }
+
+  #container {
+    width: 80%;
+    max-width: 90%;
+    margin: 20px auto;
+  }
+
+  #cameraHolder {
+    width: 100%;
+  }
+
+  video, canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  #nameInput,
+  button {
+    max-width: 320px;
+    font-size: 16px;
+    display: flex;
+    height: 44px;
+  }
+
+  #nameInput {
+    font-size: 22px;
+  }
+
+
+  h1 {
+    font-size: 20px;
+    line-height: 1.3;
+    padding: 0 10px;
+  }
+}
+/* --- END MOBILE LAYOUT --- */
