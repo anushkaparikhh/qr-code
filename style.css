@@ -5,68 +5,103 @@
   font-style: normal;
 }
 
-h1 {
-  font-family: 'Redaction';
-  font-size: 25px;
+@font-face {
+  font-family: 'IBM';
+  src: url('fonts/IBM FONTS/Web437_IBM_XGA-AI_7x15.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
+h1 {
+  font-family: 'IBM';
+  font-size: 25px;
+  background-color: blue;
+  color: white;
+  text-align: center;
+  margin: 0 auto 20px auto; /* ensures centering */
+  display: block;           /* so it fills the width */
+  width: fit-content;              /* so text-align works */
+  height: fit-content;
+}
+
+h2 {
+  font-family: 'IBM';
+  font-size: 25px;
+  background-color: blue;
+  color: white;
+  text-align: left;
+  display: block;           /* so it fills the width */
+  width: fit-content;              /* so text-align works */
+  height: fit-content;
+}
 body {
   font-family: 'Redaction';
   text-align: center;
   margin: 0;
   padding: 20px;
+  color: blue;
 }
 
 #container {
   max-width: 600px;
   margin: 0 auto;
+  margin-top: 60px;
+  
 }
 
 video, canvas {
   width: 100%;
   height: 100%;
   margin-bottom: 20px;
-  border-radius: 2px;
+  border-radius: 0px;
+  border: 1px solid blue;
 }
 
 #nameInput {
   display: flex;
-  height: 44px;
+  height: 25px;
   padding: 5px 0;
   justify-content: center;
   align-items: center;
   margin: 0 auto 20px auto; 
   gap: 10px;
   align-self: stretch;
-  border-radius: 31px;
-  border: 1px solid #000;
-  background: #ECECEC;
+  border-radius: 0px;
+  border: 1px solid blue;
+  background: #ffffff;
   text-align: center;
   font-family: 'Redaction';
+  font-size: 20px;
+  width: 400px; 
+  color: blue;
+  
 }
 
 button {
-  display: flex;
-  height: 44px;
-  padding: 8px 15px ;
   justify-content: center;
   align-items: center;
-  margin: 0 auto auto auto; 
   gap: 10px;
   align-self: stretch;
-  border-radius: 31px;
-  border: 1px solid #000;
-  background-color: white;
+  font-family: 'IBM';
+  font-size: 25px;
+  background-color: blue;
+  color: white;
   text-align: center;
-  font-family: 'Redaction';
+  margin: 0 auto 20px auto; /* ensures centering */
+  display: block;           /* so it fills the width */
+  width: fit-content;              /* so text-align works */
+  height: fit-content;
+  cursor: pointer;
 }
 
-#nameInput, button {
-  width: flex;
-  height: 44px;
-  border-radius: 31px;
-  border: 1px solid #000;
-  text-align: center;
+.button:hover {
+  background-color: #4747ff; /* Background color on hover */
+  cursor: pointer;
+}
+
+#saveBtn:hover {
+  background-color: #4747ff; /* Background color on hover */;
+  cursor: pointer;
 }
 
 #controls {
@@ -77,13 +112,20 @@ button {
   margin-top: 20px;        /* space from video/canvas */
 }
 
-#nameInput, #saveBtn {
-  width: 400px;            /* same width for consistency */
-  height: 30px;
-  border-radius: 31px;
-  border: 1px solid #000;
+#button, #saveBtn {
+  border-radius: 0px;
+  border: 1px solid blue;
   text-align: center;
-  display: block;          /* ensures consistent sizing */
+  display: block;    
+  font-family: 'IBM';
+  font-size: 25px;
+  background-color: blue;
+  color: white;
+  text-align: center;
+  margin: 0 auto 20px auto; /* ensures centering */
+  display: block;           /* so it fills the width */
+  width: fit-content;              /* so text-align works */
+  height: fit-content;      /* ensures consistent sizing */
 }
 
 /* --- MOBILE LAYOUT --- */
@@ -96,7 +138,8 @@ button {
   #container {
     width: 80%;
     max-width: 90%;
-    margin: 20px auto;
+    margin: 60px auto;
+    padding: 30px;
   }
 
   #cameraHolder {
@@ -110,10 +153,10 @@ button {
 
   #nameInput,
   button {
-    max-width: 320px;
+    max-width: 300px;
     font-size: 16px;
     display: flex;
-    height: 44px;
+    height: 40px;
   }
 
   #nameInput {
@@ -128,3 +171,4 @@ button {
   }
 }
 /* --- END MOBILE LAYOUT --- */
+

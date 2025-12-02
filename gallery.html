@@ -2,55 +2,73 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>a collection</title>
+  <title>THE QR ARCHIVE</title>
+  <link rel="icon" href="qrcode.png" type="image/x-icon">
   <link rel="stylesheet" href="style.css" />
   <style>
+
+    .twoscreen-only { display: none; }
+    .onescreen-only { display: none; }
+    .default-only { display: inline; }
+
     body {
       font-family: 'Redaction';
-      text-align: center;
+      text-align: left;
       padding: 60px 100px;
     }
-    h1 {
-      margin-bottom: 20px;
+
+    h2 {
+      font-family: 'IBM';
+      font-size: 25px;
+      background-color: blue;
+      color: white;
+      text-align: left;
+      display: block;
+      width: fit-content;
+      height: fit-content;
     }
+
+    h3 {
+      font-family: 'IBM';
+      font-size: 20px;
+      color: blue;
+      text-align: left;
+      display: block;
+      width: fit-content;
+      height: fit-content;
+      line-height: 1.3em;
+    }
+
     /* gallery layout */
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3 columns */
-      column-gap: 0px;   /* horizontal spacing (make this small) */
-      row-gap: 20px; 
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 20px;
+      row-gap: 20px;
       justify-items: center;
       align-items: start;
     }
 
-    /* item container is a column so children stack vertically */
+    /* item container is a square */
     .grid-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 342.75px;        /* fixed card width */
-      /* height removed so caption can flow below image naturally */
-      overflow: hidden;
-      border: 1px solid #000000;
-      border-radius: 0px;
-      background: #F9F9F9;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    /* image wrapper controls image box size and cropping */
-    .grid-item .img-box {
       width: 100%;
-      height: 0;
-      padding-bottom: 100%; /* makes square box: 250x250 via width */
+      aspect-ratio: 1 / 1;
       position: relative;
       overflow: hidden;
       border-radius: 0px;
-      background: #ddd;
-      border: 1px solid #000000;
+      border: 2px solid blue;
     }
 
-    /* the actual <img> fills the wrapper and is cropped via object-fit */
+    /* image wrapper */
+    .grid-item .img-box {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0px;
+    }
+
+    /* image fills wrapper */
     .grid-item .img-box img {
       position: absolute;
       inset: 0;
@@ -58,74 +76,94 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      filter: grayscale(100%) sepia(100%)  hue-rotate(190deg) brightness(100%);
     }
 
-    /* caption below the image */
-    .grid-item .name {
-      margin-top: 10px;
-      width: 100%;
-      text-align: center;
+    /* name overlay top-left */
+    .grid-item .img-box .name {
+      position: absolute;
+      font-size: 16px;
       font-weight: 700;
-      color: #111;
-      background: none;      /* override any previous translucent background */
-      text-shadow: none;
-      padding: 6px 0 0 0;
-      box-sizing: border-box;
+      color: blue;
+      background-color: rgba(255, 255, 255);
+      padding: 2px 6px;
+      border-radius: 0px;
+      border: 1px solid blue;
+      z-index: 10;
+      text-align: left;
     }
 
-        /* ---------------------------- */
-    /* MOBILE + TABLET RESPONSIVE   */
-    /* ---------------------------- */
+    .header-container{
+      display: flex;
+      justify-content: space-between; /* h2 left, image right */
+      align-items: flex-start;        /* align top */
+      gap: 20px; 
+    }
 
-    /* Medium screens → 2 columns */
+    .header-container {
+      display: flex;
+      justify-content: space-between; /* h2 left, image right */
+      align-items: flex-start;        /* top align */
+      gap: 20px;
+    }
+
+    .header-container h2 {
+      font-family: 'IBM';
+      font-size: 25px;
+      background-color: blue;
+      color: white;
+      display: inline-block; /* only as wide as text */
+    }
+
+    .header-container .header-img {
+      width: auto;
+      height: auto;
+      max-width: 100px;   /* adjust as needed */
+      max-height: 100px;  /* adjust as needed */
+      object-fit: contain;
+    }
+
+}
+    /* responsive */
     @media (max-width: 1200px) {
+      .twoscreen-only { display: inline; }
+      .onescreen-only { display: none; }
+      .default-only { display: none; }
+
       body {
         padding: 40px 40px;
       }
 
       .grid {
         grid-template-columns: repeat(2, 1fr);
-        column-gap: 10px;
+        column-gap: 20px;
         row-gap: 20px;
-        padding: 50px;
       }
 
-      .grid-item {
-        width: 100%;
-        padding: 15px;
-      }
+      h2 { font-size: 22px; }
+      h3 { font-size: 20px; }
+      .grid-item .img-box .name { font-size: 20px; }
     }
 
-    /* Small screens → 1 column */
     @media (max-width: 600px) {
+
+      .twoscreen-only { display: none; }
+      .onescreen-only { display: inline; }
+      .default-only { display: none; }
+
       body {
-        padding: 30px 20px;
+        padding: 20px 20px;
       }
 
       .grid {
-        grid-template-columns: 1fr;   /* ONE COLUMN */
-        row-gap: 25px;
-        column-gap: 0;
-        padding: 50px;
+        grid-template-columns: 1fr;
+        row-gap: 20px;
+        padding: 20px 40px;
       }
 
-      .grid-item {
-        width: 100%;
-        padding: 15px;
-      }
-
-      .grid-item .img-box {
-        padding-bottom: 100%; /* still square */
-      }
-
-      h1 {
-        font-size: 1.4rem;
-        padding: 0 10px;
-      }
-
-      .name {
-        font-size: 1rem;
-      }
+      h2 { font-size: 18px; }
+      h3 { font-size: 17px; }
+      .grid-item .img-box .name { font-size: 20px; }
     }
 
 
@@ -134,7 +172,22 @@
   <script type="module" src="https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js"></script>
 </head>
 <body>
-  <h1>a collection</h1>
+  <div class="header-container">
+  <h2>THE QR ARCHIVE</h2>
+  <a href="index.html">
+  <img src="qrcode.png" alt="qr-code" class="header-img"></img>
+  </a>
+  </div>
+
+  <h3>Welcome! Thank you to formally consenting to the distribution<br>
+      of your information to any personnel, including but not limited to, <br>
+      your face, your name, your digitally generated identity, etc. <br>
+      There are many more like you! Don’t be ignorant. <br><br>
+      <span class="default-only">//////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+      <span class="twoscreen-only">///////////////////////////////////////////////////////////////////////////////////////</span>
+      <span class="onescreen-only">////////////////////////////////////////////////////////////</span>
+  </h3>
+
   <div class="grid" id="gallery"></div>
 
   <!-- Firebase -->
@@ -174,17 +227,17 @@
         imgBox.className = "img-box";
 
         const img = document.createElement("img");
-        img.src = data.url || "";      // URL of saved combined photo (photo + fake QR)
+        img.src = data.url || ""; 
         img.alt = data.name || "Photo";
         imgBox.appendChild(img);
 
-        item.appendChild(imgBox);
-
-        // caption - appended after image so it appears below
+        // add name inside the img-box
         const nameDiv = document.createElement("div");
         nameDiv.className = "name";
         nameDiv.textContent = data.name || "Unnamed";
-        item.appendChild(nameDiv);
+        imgBox.appendChild(nameDiv);
+
+        item.appendChild(imgBox);
 
         galleryDiv.appendChild(item);
       });

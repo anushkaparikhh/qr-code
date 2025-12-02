@@ -3,16 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>qr code</title>
+  <link rel="icon" href="qrcode.png" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+<style>
+  body {
+  background-image: url('background code.png');
+  background-size: 100vh;       /* fills the whole page */
+  background-position: left;  /* centers the image   */
+  background-repeat: no-repeat; /* prevents tiling     */
+}
+</style>
 <body>
   <div id="container" class="controls">
-    <h1>capture a clear image of your face</h1>
+    <h1>CAPTURE A CLEAR IMAGE OF YOUR FACE</h1>
 	<div id="cameraHolder"></div>
     <input id="nameInput" type="text" placeholder="type your full name here">
     <button id="captureBtn">CAPTURE</button>
-    <button id="saveBtn" style="display:none;">Save + Continue to Gallery</button>
+    <button id="saveBtn" style="display:none;">CONTINUE-></button>
   </div>
 
   <!-- p5.js -->

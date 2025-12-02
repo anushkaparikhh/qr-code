@@ -188,3 +188,24 @@ async function saveToFirebase() {
     }
   });
 }
+
+
+//button transition
+// button transition
+function capturePhoto() {
+  saved = true;
+
+  capturedImage = createImage(width, height);
+  capturedImage.copy(video, 0, 0, width, height, 0, 0, width, height);
+
+  qrCanvas = createGraphics(qrSize * moduleSize, qrSize * moduleSize);
+  generateFakeQR(qrCanvas, capturedImage);
+
+  // Hide capture button, show save button
+  captureBtn.hide();
+  saveBtn.show();
+}
+
+
+
+
