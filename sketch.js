@@ -17,6 +17,7 @@ let capturedImage;
 let qrCanvas;
 let saved = false;
 
+
 let captureBtn, saveBtn, nameInput;
 
 let qrSize = 29;
@@ -41,12 +42,24 @@ function setup() {
 }
 
 function draw() {
+  background(0);
+  // crop to square
+  let camW = video.width;
+  let camH = video.height;
+  let s = min(camW, camH);
+
+  let sx = (camW - s) / 2;
+  let sy = (camH - s) / 2;
+
+  // draw square crop
+  image(video, 0, 0, width, height, sx, sy, s, s);
+  
   if (!saved) {
   push();
     // Flip horizontally to un-mirror the webcam
     translate(width, 0);
     scale(-1, 1);
-    image(video, 0, 0, width, height);
+    image(video, 0, 0, width, height, sx, sy, s, s);
     pop();
   } else if (capturedImage && qrCanvas) {
     image(capturedImage, 0, 0, width, height);
@@ -92,7 +105,7 @@ function generateFakeQR(pg, img) {
 }
 
 function placeFinder(qr, gx, gy) {
-  for (let x = 0; x < 7; x++) {
+  for (let x = 0; x < 7; x++) { 
     for (let y = 0; y < 7; y++) {
       let isOuter = x === 0 || x === 6 || y === 0 || y === 6;
       let isInner = x >= 2 && x <= 4 && y >= 2 && y <= 4;

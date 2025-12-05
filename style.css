@@ -12,10 +12,34 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'RedactionHIGH';
+  src: url('fonts/Redaction_35-Italic.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RedactionLOW';
+  src: url('fonts/Redaction_100-Italic.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.name-short {
+  font-family: 'RedactionHIGH';
+}
+
+.name-long {
+  font-family: 'RedactionLOW'; /* or whatever font you want for long names */
+}
+
+
 h1 {
   font-family: 'IBM';
   font-size: 25px;
-  background-color: blue;
+  background-color: rgb(0, 0, 0);
   color: white;
   text-align: center;
   margin: 0 auto 20px auto; /* ensures centering */
@@ -27,7 +51,7 @@ h1 {
 h2 {
   font-family: 'IBM';
   font-size: 25px;
-  background-color: blue;
+  background-color: rgb(0, 0, 0);
   color: white;
   text-align: left;
   display: block;           /* so it fills the width */
@@ -39,7 +63,7 @@ body {
   text-align: center;
   margin: 0;
   padding: 20px;
-  color: blue;
+  color: rgb(0, 0, 0);
 }
 
 #container {
@@ -54,7 +78,7 @@ video, canvas {
   height: 100%;
   margin-bottom: 20px;
   border-radius: 0px;
-  border: 1px solid blue;
+  border: 1px solid rgb(0, 0, 0);
 }
 
 #nameInput {
@@ -67,13 +91,13 @@ video, canvas {
   gap: 10px;
   align-self: stretch;
   border-radius: 0px;
-  border: 1px solid blue;
+  border: 1px solid rgb(0, 0, 0);
   background: #ffffff;
   text-align: center;
   font-family: 'Redaction';
   font-size: 20px;
   width: 400px; 
-  color: blue;
+  color: rgb(0, 0, 0);
   
 }
 
@@ -84,7 +108,7 @@ button {
   align-self: stretch;
   font-family: 'IBM';
   font-size: 25px;
-  background-color: blue;
+  background-color: rgb(0, 0, 0);
   color: white;
   text-align: center;
   margin: 0 auto 20px auto; /* ensures centering */
@@ -95,12 +119,12 @@ button {
 }
 
 .button:hover {
-  background-color: #4747ff; /* Background color on hover */
+  background-color: #505050; /* Background color on hover */
   cursor: pointer;
 }
 
 #saveBtn:hover {
-  background-color: #4747ff; /* Background color on hover */;
+  background-color: #505050; /* Background color on hover */;
   cursor: pointer;
 }
 
@@ -114,12 +138,12 @@ button {
 
 #button, #saveBtn {
   border-radius: 0px;
-  border: 1px solid blue;
+  border: 1px solid rgb(0, 0, 0);
   text-align: center;
   display: block;    
   font-family: 'IBM';
   font-size: 25px;
-  background-color: blue;
+  background-color: rgb(0, 0, 0);
   color: white;
   text-align: center;
   margin: 0 auto 20px auto; /* ensures centering */
@@ -153,14 +177,14 @@ button {
 
   #nameInput,
   button {
-    max-width: 300px;
-    font-size: 16px;
+    max-width: 280px;
+    font-size: 25px;
     display: flex;
     height: 40px;
   }
 
   #nameInput {
-    font-size: 22px;
+    font-size: 18px;
   }
 
 
@@ -172,3 +196,20 @@ button {
 }
 /* --- END MOBILE LAYOUT --- */
 
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#container {
+  flex: 1; /* pushes footer down */
+}
+
+#pageFooter {
+  text-align: center;
+  padding: 20px;
+  color: white;
+  font-size: 14px;
+}

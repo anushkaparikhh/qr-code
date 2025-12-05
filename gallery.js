@@ -46,6 +46,13 @@ async function loadGallery() {
     nameDiv.textContent = data.name;
     item.appendChild(nameDiv);
 
+    if (nameText.length > 20) {
+  nameDiv.classList.add("name-long");
+} else {
+  nameDiv.classList.add("name-short");
+}
+
+
     // Append to gallery
     galleryDiv.appendChild(item);
   });

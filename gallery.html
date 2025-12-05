@@ -2,7 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>THE QR ARCHIVE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan for ____________</title>
   <link rel="icon" href="qrcode.png" type="image/x-icon">
   <link rel="stylesheet" href="style.css" />
   <style>
@@ -12,15 +13,17 @@
     .default-only { display: inline; }
 
     body {
+      background-color: white;
       font-family: 'Redaction';
       text-align: left;
       padding: 60px 100px;
+      margin: 10px;
     }
 
     h2 {
       font-family: 'IBM';
       font-size: 25px;
-      background-color: blue;
+      background-color: rgb(0, 0, 0);
       color: white;
       text-align: left;
       display: block;
@@ -31,7 +34,7 @@
     h3 {
       font-family: 'IBM';
       font-size: 20px;
-      color: blue;
+      color: rgb(0, 0, 0);
       text-align: left;
       display: block;
       width: fit-content;
@@ -56,7 +59,7 @@
       position: relative;
       overflow: hidden;
       border-radius: 0px;
-      border: 2px solid blue;
+      border: 2px solid rgb(0, 0, 0);
     }
 
     /* image wrapper */
@@ -76,7 +79,8 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      filter: grayscale(100%) sepia(100%)  hue-rotate(190deg) brightness(100%);
+      filter: grayscale(100%);
+      /* filter: grayscale(100%) sepia(100%)  hue-rotate(190deg) brightness(100%);*/
     }
 
     /* name overlay top-left */
@@ -84,11 +88,11 @@
       position: absolute;
       font-size: 16px;
       font-weight: 700;
-      color: blue;
+      color: rgb(0, 0, 0);
       background-color: rgba(255, 255, 255);
       padding: 2px 6px;
       border-radius: 0px;
-      border: 1px solid blue;
+      border: 1px solid rgb(0, 0, 0);
       z-index: 10;
       text-align: left;
     }
@@ -110,7 +114,7 @@
     .header-container h2 {
       font-family: 'IBM';
       font-size: 25px;
-      background-color: blue;
+      background-color: rgb(0, 0, 0);
       color: white;
       display: inline-block; /* only as wide as text */
     }
@@ -122,14 +126,35 @@
       max-height: 100px;  /* adjust as needed */
       object-fit: contain;
     }
+    
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-}
+    #gallery {
+      flex: 1; /* makes the main content stretch so footer stays at bottom */
+    }
+
+    #pageFooter {
+      text-align: left;        /* match your site style */
+      padding: 40px 0;
+      margin-top: 60px;
+      font-family: 'IBM';
+      font-size: 20px;
+      line-height: 30px;
+      color: black;
+    }
+
+
     /* responsive */
     @media (max-width: 1200px) {
       .twoscreen-only { display: inline; }
       .onescreen-only { display: none; }
       .default-only { display: none; }
-
+      @media (max-width: 600px) {
+      }
       body {
         padding: 40px 40px;
       }
@@ -147,9 +172,18 @@
 
     @media (max-width: 600px) {
 
+        /* reduce vertical spacing between the title and subtitle on narrow screens */
+        h2 { margin: 20px 0 4px 0; }
+        h3 { margin: 4px 0 0 0; }
+        /* tighten header gap so the elements sit closer together */
+        .header-container { gap: 8px; }
+
       .twoscreen-only { display: none; }
       .onescreen-only { display: inline; }
       .default-only { display: none; }
+      .mobile-break {
+            display: none;
+      }
 
       body {
         padding: 20px 20px;
@@ -158,14 +192,27 @@
       .grid {
         grid-template-columns: 1fr;
         row-gap: 20px;
-        padding: 20px 40px;
+        padding: 20px 20px;
       }
 
       h2 { font-size: 18px; }
-      h3 { font-size: 17px; }
-      .grid-item .img-box .name { font-size: 20px; }
-    }
+      h3 { 
+        font-size: 14px;
+        width: 300px ; 
+      }
 
+
+      .header-img {
+        width: 30px !important;
+        height: 30px !important;
+        object-fit: contain;
+        padding: 20px 0px;
+        display: inline-block;
+      }
+    
+      .grid-item .img-box .name { font-size: 20px; }
+  }
+     
 
   </style>
   <script type="module" src="https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js"></script>
@@ -173,81 +220,118 @@
 </head>
 <body>
   <div class="header-container">
-  <h2>THE QR ARCHIVE</h2>
-  <a href="index.html">
-  <img src="qrcode.png" alt="qr-code" class="header-img"></img>
-  </a>
+  
+  <div class="title-stack">
+    <h3 style="font-family: 'Redaction';">Scan for ____________</h3>
+    <h2>THE QRCHIVE</h2>
   </div>
 
-  <h3>Welcome! Thank you to formally consenting to the distribution<br>
-      of your information to any personnel, including but not limited to, <br>
-      your face, your name, your digitally generated identity, etc. <br>
-      There are many more like you! Don’t be ignorant. <br><br>
+  <a href="index.html">
+    <img src="qrcode.png" alt="qr-code" class="header-img" />
+  </a>
+
+</div>
+
+
+  <h3>Welcome! Thank you to formally consenting to the distribution<span class="mobile-break"><br></span>
+      of your information to any personnel, including but not limited to, <span class="mobile-break"><br></span>
+      your face, your name, your digitally generated identity, etc. <span class="mobile-break"><br></span>
+      There are many more like you! Don’t be ignorant. 
+      <p id="scrollToBottom" style="cursor:pointer; font-family:'IBM';">
+        Scroll to the end. ↓
+      </p>     <span class="mobile-break"><br></span><br><br>
       <span class="default-only">//////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
       <span class="twoscreen-only">///////////////////////////////////////////////////////////////////////////////////////</span>
-      <span class="onescreen-only">////////////////////////////////////////////////////////////</span>
+      <span class="onescreen-only">//////////////////////////////////////////////////</span>
   </h3>
 
   <div class="grid" id="gallery"></div>
 
   <!-- Firebase -->
   <script type="module">
-  // gallery.js
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyD9Oj4pG2hQOrRC6kQHzYLaoYfclYqrkC4",
-      authDomain: "qr-code-storage-cafbd.firebaseapp.com",
-      projectId: "qr-code-storage-cafbd",
-      storageBucket: "qr-code-storage-cafbd.appspot.com",
-      messagingSenderId: "331142708016",
-      appId: "1:331142708016:web:eacbda8f3ea08b87df66f5",
-      measurementId: "G-BMQ5BXCJL4"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyD9Oj4pG2hQOrRC6kQHzYLaoYfclYqrkC4",
+    authDomain: "qr-code-storage-cafbd.firebaseapp.com",
+    projectId: "qr-code-storage-cafbd",
+    storageBucket: "qr-code-storage-cafbd.appspot.com",
+    messagingSenderId: "331142708016",
+    appId: "1:331142708016:web:eacbda8f3ea08b87df66f5",
+    measurementId: "G-BMQ5BXCJL4"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-    const galleryDiv = document.getElementById("gallery");
+  const galleryDiv = document.getElementById("gallery");
 
-    async function loadGallery() {
-      galleryDiv.innerHTML = ""; // clear first
-      const querySnapshot = await getDocs(collection(db, "gallery"));
+  async function loadGallery() {
+    galleryDiv.innerHTML = "";
 
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
+    const querySnapshot = await getDocs(collection(db, "gallery"));
 
-        // container
-        const item = document.createElement("div");
-        item.className = "grid-item";
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const nameText = data.name || "Unnamed";
 
-        // image wrapper
-        const imgBox = document.createElement("div");
-        imgBox.className = "img-box";
+      // grid item
+      const item = document.createElement("div");
+      item.className = "grid-item";
 
-        const img = document.createElement("img");
-        img.src = data.url || ""; 
-        img.alt = data.name || "Photo";
-        imgBox.appendChild(img);
+      // wrapper
+      const imgBox = document.createElement("div");
+      imgBox.className = "img-box";
 
-        // add name inside the img-box
-        const nameDiv = document.createElement("div");
-        nameDiv.className = "name";
-        nameDiv.textContent = data.name || "Unnamed";
-        imgBox.appendChild(nameDiv);
+      // image
+      const img = document.createElement("img");
+      img.src = data.url || "";
+      img.alt = nameText;
+      imgBox.appendChild(img);
 
-        item.appendChild(imgBox);
+      // name
+      const nameDiv = document.createElement("div");
+      nameDiv.classList.add("name");
+      nameDiv.textContent = nameText;
 
-        galleryDiv.appendChild(item);
-      });
-    }
+      // FONT SWITCHING
+      if (nameText.length > 15) {
+        nameDiv.classList.add("name-short");
+      } else {
+        nameDiv.classList.add("name-long");
+      }
 
-    loadGallery().catch(err => {
-      console.error("Failed to load gallery:", err);
-      galleryDiv.textContent = "Failed to load gallery.";
+      imgBox.appendChild(nameDiv);
+      item.appendChild(imgBox);
+      galleryDiv.appendChild(item);
     });
+  }
 
-  </script>
+  loadGallery().catch(err => {
+    console.error("Gallery load failed:", err);
+    galleryDiv.textContent = "Error loading gallery.";
+  });
+
+  
+</script>
+
+
+   <footer id="pageFooter">
+    © 2025 — WHY QR CODES? <br>
+    The “Scan for ____________” campaign considers how society has become dependent and compliant to technology despite its ambiguity and lack of “informative” design. This campaign is for you, the one who mindlessly scanned this code, the user that interacts with this technology but failing to consider or learn of its ethical implications. Technology comes in many complex forms and origins that must be questioned and investigated to avoid compliant control of society. The goal of this campaign is to achieve a more mindful society that encourages curiosity within the ethics of technology and the dissemination of information via “accessible” forms of design. 
+
+    
+  </footer>
+
+  <script>
+  document.getElementById("scrollToBottom").addEventListener("click", () => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth"
+    });
+  });
+</script>
+
 </body>
 </html>
