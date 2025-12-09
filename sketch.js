@@ -12,11 +12,12 @@ const getDownloadURL = window.getDownloadURL; // ✔️ now defined
 
 // sketch.js — Firebase v12 fixed version
 
-let video;
-let capturedImage;
-let qrCanvas;
-let saved = false;
+// sketch.js — replace your current file with this
 
+let video;
+let capturedImage;   // p5.Image used for the saved/captured photo
+let qrCanvas;        // p5.Graphics for the fake QR
+let saved = false;
 
 let captureBtn, saveBtn, nameInput;
 
@@ -28,10 +29,9 @@ function setup() {
   pixelDensity(1);
   background(220);
 
+  // DON'T force a square video size here — let the video have its natural aspect
   video = createCapture(VIDEO);
-  video.size(width, height);
   video.hide();
-
 
   captureBtn = select("#captureBtn");
   saveBtn = select("#saveBtn");
@@ -39,48 +39,83 @@ function setup() {
 
   captureBtn.mousePressed(capturePhoto);
   saveBtn.mousePressed(saveToFirebase);
+  saveBtn.hide();
 }
 
 function draw() {
   background(0);
-  // crop to square
+
+  // if video not ready yet, bail
+  if (!video || video.width === 0) {
+    fill(255);
+    textAlign(CENTER, CENTER);
+    text("Waiting for camera...", width/2, height/2);
+    return;
+  }
+
+  // center-square crop parameters from the source video
   let camW = video.width;
   let camH = video.height;
   let s = min(camW, camH);
-
   let sx = (camW - s) / 2;
   let sy = (camH - s) / 2;
 
-  // draw square crop
-  image(video, 0, 0, width, height, sx, sy, s, s);
-  
   if (!saved) {
-  push();
-    // Flip horizontally to un-mirror the webcam
+    // draw a single mirrored preview (only once)
+    push();
     translate(width, 0);
-    scale(-1, 1);
+    scale(-1, 1); // mirror for webcam-like preview
+    // Draw the centered square from the video scaled to fill the canvas
     image(video, 0, 0, width, height, sx, sy, s, s);
     pop();
   } else if (capturedImage && qrCanvas) {
+    // show the captured (already-flipped) image exactly filling canvas
+    imageMode(CORNER);
     image(capturedImage, 0, 0, width, height);
+    // draw QR overlay in front
     image(qrCanvas, width * 0.3, height * 0.3, width * 0.4, height * 0.4);
   }
 }
 
+/* ---------------- Capturing and ensuring preview==capture ----------------
+   Important: we draw the video into a graphics buffer with the SAME transform
+   (mirrored + the center-square crop) and then extract that buffer as the
+   capturedImage. That guarantees the captured image looks exactly like the preview.
+-------------------------------------------------------------------------- */
 function capturePhoto() {
   saved = true;
 
-  capturedImage = createImage(width, height);
-  capturedImage.copy(video, 0, 0, width, height, 0, 0, width, height);
+  // ensure video is ready
+  if (!video || video.width === 0) return;
 
+  // center-square crop parameters (same as draw)
+  let camW = video.width;
+  let camH = video.height;
+  let s = min(camW, camH);
+  let sx = (camW - s) / 2;
+  let sy = (camH - s) / 2;
+
+  // draw the exact preview into a graphics buffer
+  let buf = createGraphics(width, height);
+  buf.push();
+  // apply same mirror transform used in draw()
+  buf.translate(width, 0);
+  buf.scale(-1, 1);
+  buf.image(video, 0, 0, width, height, sx, sy, s, s);
+  buf.pop();
+
+  // get a p5.Image from the buffer (capturedImage will be used later and saved)
+  capturedImage = buf.get(); // gets the pixels of the buffer as a p5.Image
+
+  // build the fake QR using the captured image
   qrCanvas = createGraphics(qrSize * moduleSize, qrSize * moduleSize);
   generateFakeQR(qrCanvas, capturedImage);
 
+  captureBtn.hide();
   saveBtn.show();
 }
 
-// -------- QR GENERATION --------
-
+/* ----------------- QR generation (unchanged logic, same as yours) ----------------- */
 function generateFakeQR(pg, img) {
   pg.image(img, 0, 0, pg.width, pg.height);
   pg.loadPixels();
@@ -105,7 +140,7 @@ function generateFakeQR(pg, img) {
 }
 
 function placeFinder(qr, gx, gy) {
-  for (let x = 0; x < 7; x++) { 
+  for (let x = 0; x < 7; x++) {
     for (let y = 0; y < 7; y++) {
       let isOuter = x === 0 || x === 6 || y === 0 || y === 6;
       let isInner = x >= 2 && x <= 4 && y >= 2 && y <= 4;
@@ -138,13 +173,13 @@ function fillDataFromImage(qr, pg) {
     for (let gy = 0; gy < qrSize; gy++) {
       if (qr[gx][gy] !== null) continue;
 
-      let px = gx * moduleSize;
-      let py = gy * moduleSize;
+      let px = Math.floor(gx * moduleSize);
+      let py = Math.floor(gy * moduleSize);
       let i = (px + py * pg.width) * 4;
 
-      let r = pg.pixels[i];
-      let g = pg.pixels[i + 1];
-      let b = pg.pixels[i + 2];
+      let r = pg.pixels[i] || 0;
+      let g = pg.pixels[i + 1] || 0;
+      let b = pg.pixels[i + 2] || 0;
 
       let brightness = (r + g + b) / 3;
       let jitter = random(-25, 40);
@@ -163,8 +198,7 @@ function fillRemainingLight(qr) {
   }
 }
 
-// -------- SAVE TO FIREBASE (v12) --------
-
+/* ----------------- saveToFirebase (keep your original logic, unchanged) ----------------- */
 async function saveToFirebase() {
   const name = nameInput.value();
   if (!name || !capturedImage || !qrCanvas) {
@@ -182,43 +216,18 @@ async function saveToFirebase() {
       await window.uploadBytes(fileRef, blob);
       const url = await window.getDownloadURL(fileRef);
 
-
-      // Save record in Firestore (use window.db to ensure Firestore is initialized)
       await window.addDoc(window.collection(window.db, "gallery"), {
         name,
         url,
         timestamp: window.Date.now()
       });
 
-      alert("Saved to Firebase!");
+      //alert("Saved to Firebase!");//
       saveBtn.hide();
-
       window.location.href = "gallery.html";
-
     } catch (err) {
       console.error(err);
       alert("Error saving to Firebase.");
     }
   });
 }
-
-
-//button transition
-// button transition
-function capturePhoto() {
-  saved = true;
-
-  capturedImage = createImage(width, height);
-  capturedImage.copy(video, 0, 0, width, height, 0, 0, width, height);
-
-  qrCanvas = createGraphics(qrSize * moduleSize, qrSize * moduleSize);
-  generateFakeQR(qrCanvas, capturedImage);
-
-  // Hide capture button, show save button
-  captureBtn.hide();
-  saveBtn.show();
-}
-
-
-
-
